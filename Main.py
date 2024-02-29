@@ -58,6 +58,15 @@ def Wprowadznie_bledu_do_wiadomosci(Cala_wiadmosc, ilosc_beldow):
         Filipownie_bitow(Cala_wiadmosc, random.randint(0,14))
     return Cala_wiadmosc
 
+def sprawdzanie_czy_jest_blad():
+    pass
+
+def Sprawdzanie_i_wysyalknie_posby():
+    pass
+
+def sklejanie_calej_wiadomosci():
+    pass
+
 if __name__ == "__main__":
     key = [1, 0, 0, 0, 0, 1, 1, 1]
     Vetor_przyjety = [1, 0, 1, 0, 0, 1, 1, 0]
@@ -66,5 +75,6 @@ if __name__ == "__main__":
     print("Zaszyfrowana wiadomość:", ResztaCrc)
     Vetor_przyjety.extend(ResztaCrc)
     print(Vetor_przyjety)
+    Vetor_przyjety_kopia_na_puzniej = Vetor_przyjety.copy() # To jest jak juz wykryje blad zeby maszyna wyslal poprawny kod sprawdzarce
     zepsuta_wiadomosc = Wprowadznie_bledu_do_wiadomosci(Vetor_przyjety, 8)
     print(zepsuta_wiadomosc)
