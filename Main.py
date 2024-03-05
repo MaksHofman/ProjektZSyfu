@@ -58,9 +58,21 @@ def Wprowadznie_bledu_do_wiadomosci(Cala_wiadmosc, ilosc_beldow):
         Filipownie_bitow(Cala_wiadmosc, random.randint(0,14))
     return Cala_wiadmosc
 
-def sprawdzanie_czy_jest_blad():
-    pass
-
+def sprawdzanie_czy_jest_blad(wiadomosc, klucz):
+    czesc_wiadomosci = []
+    czesc_modulo = []
+    for _ in range(len(wiadomosc)):
+        if _ <= 7:
+            czesc_wiadomosci.append(wiadomosc(_))
+        elif _ > 7 and _ < 14:
+            czesc_modulo.append(wiadomosc(_))
+        else:
+            raise ValueError("Zaduzo bitow")
+    modulo_wiadmosci = crc_remainder(czesc_wiadomosci, klucz)
+    if modulo_wiadmosci == czesc_modulo:
+        return 0
+    else:
+        return 1
 def Sprawdzanie_i_wysyalknie_posby():
     pass
 
