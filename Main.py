@@ -105,7 +105,19 @@ def Sprawdzanie_i_wysyalknie_posby(wiadomosc, klucz):
         pass #nw narazie jak to zorbic zeby poprosilo o ponowne wyslanie
 
 
-def sklejanie_calej_wiadomosci():
+def sklejanie_calej_wiadomosci(w1, w2, w3, w4, w5, w6, w7, w8):
+    cala_wiadomosc = []
+    cala_wiadomosc.extend(w1)
+    cala_wiadomosc.extend(w2)
+    cala_wiadomosc.extend(w3)
+    cala_wiadomosc.extend(w4)
+    cala_wiadomosc.extend(w5)
+    cala_wiadomosc.extend(w6)
+    cala_wiadomosc.extend(w7)
+    cala_wiadomosc.extend(w8)
+    return cala_wiadomosc
+
+def Caly_Program(input):
     pass
 
 if __name__ == "__main__":
