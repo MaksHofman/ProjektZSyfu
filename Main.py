@@ -70,11 +70,16 @@ def sprawdzanie_czy_jest_blad(wiadomosc, klucz):
             raise ValueError("Zaduzo bitow")
     modulo_wiadmosci = crc_remainder(czesc_wiadomosci, klucz)
     if modulo_wiadmosci == czesc_modulo:
-        return 0
+        return 0, czesc_wiadomosci
     else:
         return 1
-def Sprawdzanie_i_wysyalknie_posby():
-    pass
+def Sprawdzanie_i_wysyalknie_posby(wiadomosc, klucz):
+    x, poprawna_wiadomosc = sprawdzanie_czy_jest_blad(wiadomosc, klucz)
+    if x == 0:
+        return poprawna_wiadomosc
+    elif x == 1:
+        pass #nw narazie jak to zorbic zeby poprosilo o ponowne wyslanie
+
 
 def sklejanie_calej_wiadomosci():
     pass
