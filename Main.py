@@ -6,8 +6,32 @@ wiec bedzie extra 56bitow wiec spoko i wykrywa jak jest nawet 8 bitow zle w 8 bi
 stronka z wytlumaczniem co to crc - https://pl.wikipedia.org/wiki/Cykliczny_kod_nadmiarowy
 """
 import random
-def Rozdzielenie_64bitow_na_8paczek_8bitow():
-    pass
+def Rozdzielenie_64bitow_na_8paczek_8bitow(Calo_bitowa_wiadomosc):
+    paczka_nr1 = []
+    paczka_nr2 = []
+    paczka_nr3 = []
+    paczka_nr4 = []
+    paczka_nr5 = []
+    paczka_nr6 = []
+    paczka_nr7 = []
+    paczka_nr8 = []
+    for _ in range(len(Calo_bitowa_wiadomosc)):
+        if _ <= 7:
+            paczka_nr1.append(Calo_bitowa_wiadomosc(_))
+        elif _ <= 15 and _ > 7:
+            paczka_nr2.append(Calo_bitowa_wiadomosc(_))
+        elif _ <= 23 and _ > 15:
+            paczka_nr3.append(Calo_bitowa_wiadomosc(_))
+        elif _ <= 31 and _ > 23:
+            paczka_nr4.append(Calo_bitowa_wiadomosc(_))
+        elif _ <= 39 and _ > 31:
+            paczka_nr5.append(Calo_bitowa_wiadomosc(_))
+        elif _ <= 47 and _ > 39:
+            paczka_nr6.append(Calo_bitowa_wiadomosc(_))
+        elif _ <= 55 and _ > 47:
+            paczka_nr7.append(Calo_bitowa_wiadomosc(_))
+        elif _ <= 63 and _ > 55:
+            paczka_nr8.append(Calo_bitowa_wiadomosc(_))
 
 def Podanie_8_bitowego_Vektora_do_zaszyfrowania():
     Vetor_przyjety= []
