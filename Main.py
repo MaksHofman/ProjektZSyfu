@@ -77,6 +77,8 @@ def Filipownie_bitow(Vetor_przyjety, bit):
         Vetor_przyjety[bit] = 0
     elif Vetor_przyjety[bit] == 0:
         Vetor_przyjety[bit] = 1
+
+#zreworkowac trzeba to
 def Wprowadznie_bledu_do_wiadomosci(Cala_wiadmosc, ilosc_beldow):
     for i in range(ilosc_beldow):
         Filipownie_bitow(Cala_wiadmosc, random.randint(0,14))
