@@ -75,7 +75,6 @@ def crc_remainder(message, key):
     return crc[-key_length + 1:]
 
 def Filipownie_bitow(Vetor_przyjety, bit: int):
-    print(Vetor_przyjety)
     if Vetor_przyjety[bit] == 1:
         Vetor_przyjety[bit] = 0
     elif Vetor_przyjety[bit] == 0:
@@ -92,7 +91,6 @@ def sprawdzanie_czy_jest_blad(wiadomosc, klucz):
     czesc_wiadomosci = []
     czesc_modulo = []
     for _ in range(len(wiadomosc)):
-        print(len(wiadomosc))
         if _ <= 7:
             czesc_wiadomosci.append(wiadomosc[_])
         elif _ > 7 and _ <= 14:
@@ -112,21 +110,22 @@ def Sprawdzanie_i_wysyalknie_posby(wiadomosc, klucz):
         pass #nw narazie jak to zorbic zeby poprosilo o ponowne wyslanie
 
 
-def pod_zes_paczka_handler(paczka,paczka_pre_zaszyfrowana, key, ilosc_bledow):
+def pod_zes_paczka_handler(paczka,paczka_pre_zaszyfrowana, key, ilosc_bledow, output):
     back_up = paczka.copy()
-    paczka_zklejona = back_up.extend(paczka_pre_zaszyfrowana)
-    paczka_zaszyfrowana_z_bledem, ilosc_bledow_updated = Wprowadznie_bledu_do_wiadomosci(paczka_zklejona, ilosc_bledow)
+    back_up.extend(paczka_pre_zaszyfrowana)
+    paczka_zaszyfrowana_z_bledem, ilosc_bledow_updated = Wprowadznie_bledu_do_wiadomosci(back_up, ilosc_bledow)
     czy_jest_dobrze, poprawna_wiadomosc = sprawdzanie_czy_jest_blad(paczka_zaszyfrowana_z_bledem, key)
+
     if czy_jest_dobrze == 1:
-        pod_zes_paczka_handler(paczka, key, ilosc_bledow_updated)
+        pod_zes_paczka_handler(paczka, paczka_pre_zaszyfrowana, key, ilosc_bledow_updated, output)
     elif czy_jest_dobrze == 0:
+        output.append(poprawna_wiadomosc)
         return poprawna_wiadomosc
     else:
         raise Exception("pod_paczka_handler niepoprawnie dziala")
-def paczka_handler(paczka, key, ilosc_bledow):
-    back_up = paczka.copy()
+def paczka_handler(paczka, key, ilosc_bledow, output):
     paczka_pre_zaszyfrowana = crc_remainder(paczka, key)
-    return pod_zes_paczka_handler(paczka,paczka_pre_zaszyfrowana, key, ilosc_bledow)
+    return pod_zes_paczka_handler(paczka, paczka_pre_zaszyfrowana, key, ilosc_bledow, output)
 
 def Caly_Program(input: array) -> array:
     key = [1, 0, 0, 0, 0, 1, 1, 1]
@@ -135,14 +134,15 @@ def Caly_Program(input: array) -> array:
     Paczka_array = [p1, p2, p3, p4, p5, p6, p7, p8]
     out_Paczki = []
     for x in range(len(Paczka_array)):
-        _ = paczka_handler(Paczka_array[x], key, ilosc_bledow)
-        out_Paczki.append(_)
+        _ = paczka_handler(Paczka_array[x], key, ilosc_bledow, out_Paczki)
     output = []
     for i in out_Paczki:
         output.extend(i)
 
     if output == input:
         print("udalo sie pomyslnie przeslac")
+        print(f"input: {input}")
+        print(f"output: {output}")
         return output
     else:
         raise ValueError("cos poszlo nie tak")
