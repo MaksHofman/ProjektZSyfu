@@ -122,12 +122,12 @@ def pod_zes_paczka_handler(paczka,paczka_pre_zaszyfrowana, key, ilosc_bledow, ou
         output.append(poprawna_wiadomosc)
         return poprawna_wiadomosc
     else:
-        raise Exception("pod_paczka_handler niepoprawnie dziala")
+        raise ValueError("pod_paczka_handler niepoprawnie dziala")
 def paczka_handler(paczka, key, ilosc_bledow, output):
     paczka_pre_zaszyfrowana = crc_remainder(paczka, key)
     return pod_zes_paczka_handler(paczka, paczka_pre_zaszyfrowana, key, ilosc_bledow, output)
 
-def Caly_Program(input: array) -> array:
+def Caly_Program(input: array, print_out = False) -> array:
     key = [1, 0, 0, 0, 0, 1, 1, 1]
     ilosc_bledow = 8
     p1, p2, p3, p4, p5, p6, p7, p8 = Rozdzielenie_64bitow_na_8paczek_8bitow(input)
@@ -139,10 +139,12 @@ def Caly_Program(input: array) -> array:
     for i in out_Paczki:
         output.extend(i)
 
-    if output == input:
+    if output == input and print_out == True:
         print("udalo sie pomyslnie przeslac")
         print(f"input: {input}")
         print(f"output: {output}")
+        return output
+    elif output == input and print_out == False:
         return output
     else:
         raise ValueError("cos poszlo nie tak")
@@ -154,4 +156,13 @@ def random_64_bit_test_vector_generator():
 if __name__ == "__main__":
     key = [1, 0, 0, 0, 0, 1, 1, 1]
     #Testowy_vector = [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0]
-    Caly_Program(random_64_bit_test_vector_generator())
+    Caly_Program(random_64_bit_test_vector_generator(), True)
+    wynik = 0
+    probka = 1000
+    for x in range(probka):
+        try:
+            Caly_Program(random_64_bit_test_vector_generator())
+            wynik += 1
+        except ValueError:
+            pass
+    print(f"W {wynik}/{probka} przypadkach bylo dobrze")
