@@ -156,13 +156,16 @@ def random_64_bit_test_vector_generator():
 if __name__ == "__main__":
     key = [1, 0, 0, 0, 0, 1, 1, 1]
     #Testowy_vector = [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0]
-    Caly_Program(random_64_bit_test_vector_generator(), True)
+    #Caly_Program(random_64_bit_test_vector_generator(), True)
     wynik = 0
-    probka = 1000
+    probka = 100000
+
     for x in range(probka):
         try:
             Caly_Program(random_64_bit_test_vector_generator())
             wynik += 1
         except ValueError:
             pass
+
     print(f"W {wynik}/{probka} przypadkach bylo dobrze")
+    print(f"w {(wynik/probka)*100}% jest dobrze")
