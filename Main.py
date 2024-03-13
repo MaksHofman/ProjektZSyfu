@@ -35,44 +35,8 @@ def Rozdzielenie_64bitow_na_8paczek_8bitow(Calo_bitowa_wiadomosc):
             paczka_nr8.append(Calo_bitowa_wiadomosc[_])
     return paczka_nr1, paczka_nr2, paczka_nr3, paczka_nr4, paczka_nr5, paczka_nr6, paczka_nr7, paczka_nr8
 
-def Podanie_8_bitowego_Vektora_do_zaszyfrowania():
-    Vetor_przyjety= []
-    x = True
-    z = 0
-    while x:
-        z += 1
-        _ = input("podaj bit")
-        if _.isspace():
-            x = False
-            break
-        Vetor_przyjety.append(int(_))
-        print(f"wpisano juz {z} bitow")
-    print(Vetor_przyjety)
-    return Vetor_przyjety
 
-def xor(a, b):
-    return a ^ b
 
-"""
-Baza tego to jest xor
-"""
-def crc_remainder(message, key):
-    # Dopiszemy zero na końcu wiadomości
-    message = message + [0] * (len(key) - 1)
-    # Kopia wiadomości
-    crc = message[:]
-    # Długość klucza CRC
-    key_length = len(key)
-
-    # Pętla po każdym bicie wiadomości
-    for i in range(len(message) - key_length + 1):
-        # Jeśli aktualny bit jest równy 1, wykonujemy operację XOR z kluczem
-        if crc[i] == 1:
-            for j in range(key_length):
-                crc[i + j] ^= key[j]
-
-    # Usuwamy dodatkowe bity, które były dodane na końcu wiadomości
-    return crc[-key_length + 1:]
 
 def Filipownie_bitow(Vetor_przyjety, bit: int):
     if Vetor_przyjety[bit] == 1:
@@ -87,7 +51,7 @@ def Wprowadznie_bledu_do_wiadomosci(Cala_wiadmosc,ilosc_beldow):
         ilosc_beldow -= 1
     return Cala_wiadmosc, ilosc_beldow
 
-def sprawdzanie_czy_jest_blad(wiadomosc, klucz):
+"""def sprawdzanie_czy_jest_blad(wiadomosc, klucz):
     czesc_wiadomosci = []
     czesc_modulo = []
     for _ in range(len(wiadomosc)):
@@ -126,8 +90,8 @@ def pod_zes_paczka_handler(paczka,paczka_pre_zaszyfrowana, key, ilosc_bledow, ou
 def paczka_handler(paczka, key, ilosc_bledow, output):
     paczka_pre_zaszyfrowana = crc_remainder(paczka, key)
     return pod_zes_paczka_handler(paczka, paczka_pre_zaszyfrowana, key, ilosc_bledow, output)
-
-def Caly_Program(input: array, print_out = False) -> array:
+"""
+"""def Caly_Program(input: array, print_out = False) -> array:
     key = [1, 0, 0, 0, 0, 1, 1, 1]
     ilosc_bledow = 8
     p1, p2, p3, p4, p5, p6, p7, p8 = Rozdzielenie_64bitow_na_8paczek_8bitow(input)
@@ -148,7 +112,7 @@ def Caly_Program(input: array, print_out = False) -> array:
         return output
     else:
         raise ValueError("cos poszlo nie tak")
-
+"""
 def random_64_bit_test_vector_generator():
     random_array = [random.randint(0, 1) for _ in range(64)]
     return random_array
