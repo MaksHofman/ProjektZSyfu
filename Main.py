@@ -112,7 +112,7 @@ def hamming_decode(codeword):
 
 
 
-def Filipownie_bitow(Vetor_przyjety, bit: int):
+def Filipownie_bitow(Vetor_przyjety, bit):
     if Vetor_przyjety[bit] == 1:
         Vetor_przyjety[bit] = 0
     elif Vetor_przyjety[bit] == 0:
@@ -121,7 +121,9 @@ def Filipownie_bitow(Vetor_przyjety, bit: int):
 #naprawic trzeba
 
 def Wprowadznie_bledu_do_wiadomosci(Cala_wiadmosc):
-    pass
+    i = random.randint(0, 88)
+    for j in range(8):
+        Filipownie_bitow(Cala_wiadmosc, j+i)
 
 #96 bitow trezba potasowac
 #dziala
