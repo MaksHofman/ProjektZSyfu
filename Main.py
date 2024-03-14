@@ -110,15 +110,12 @@ def hamming_decode(codeword):
 
     return decoded_data
 
-
-
 def Filipownie_bitow(Vetor_przyjety, bit):
     if Vetor_przyjety[bit] == 1:
         Vetor_przyjety[bit] = 0
     elif Vetor_przyjety[bit] == 0:
         Vetor_przyjety[bit] = 1
 
-#naprawic trzeba
 
 def Wprowadznie_bledu_do_wiadomosci(Cala_wiadmosc):
     i = random.randint(0, 88)
@@ -127,8 +124,7 @@ def Wprowadznie_bledu_do_wiadomosci(Cala_wiadmosc):
 
 #96 bitow trezba potasowac
 #dziala
-def tasowanie_bitow(p1,p2,p3,p4,p5,p6,p7,p8):
-    array_paczek = [p1,p2,p3,p4,p5,p6,p7,p8]
+def tasowanie_bitow(array_paczek):
     przetasowane = [15]*96
     for i in range(len(array_paczek)):
         z = i
@@ -138,17 +134,47 @@ def tasowanie_bitow(p1,p2,p3,p4,p5,p6,p7,p8):
 
     return przetasowane
 
-def main():
+#wazne
+def od_tasownie_bitow(array_paczek):
     pass
 
-def random_64_bit_test_vector_generator(x = 64):
-    random_array = [random.randint(0, 1) for _ in range(x)]
+def main(input, print_out = False):
+    back_up = input
+    p1,p2,p3,p4,p5,p6,p7,p8 = Rozdzielenie_64bitow_na_8paczek_8bitow(input)
+    array_paczek_pre_kodowanie = [p1,p2,p3,p4,p5,p6,p7,p8]
+    array_zakodowane = []
+    for x in array_paczek_pre_kodowanie:
+        array_zakodowane.append(hamming_encode(x))
+    array_przetasowanie = tasowanie_bitow(array_zakodowane)
+    Wprowadznie_bledu_do_wiadomosci(array_przetasowanie)
+    od_tasownie_array = od_tasownie_bitow(array_przetasowanie)
+    array_output = []
+    for y in od_tasownie_array:
+        array_output.append(hamming_decode(y))
+    output = []
+    for z in array_output:
+        output.extend(z)
+    if print_out and input == back_up and input == output:
+        print("udalo sie")
+        print(f"Input = {input}")
+        print(f"Output = {output}")
+    elif print_out == False and input == back_up and input == output:
+        return output
+    else:
+        print(f"Input = {input}")
+        print(f"Output = {output}")
+        raise ValueError("essa")
+
+
+def random_64_bit_test_vector_generator():
+    random_array = [random.randint(0, 1) for _ in range(64)]
     return random_array
 
 if __name__ == "__main__":
-    """#Testowy_vector = [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0]
-    #Caly_Program(random_64_bit_test_vector_generator(), True)
-    wynik = 0
+
+    main(random_64_bit_test_vector_generator(), True)
+    
+    """wynik = 0
     probka = 100000
 
     for x in range(probka):
@@ -159,4 +185,5 @@ if __name__ == "__main__":
             pass
 
     print(f"W {wynik}/{probka} przypadkach bylo dobrze")
-    print(f"w {(wynik/probka)*100}% jest dobrze")"""
+    print(f"w {(wynik/probka)*100}% jest dobrze")
+"""
