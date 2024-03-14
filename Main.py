@@ -35,6 +35,80 @@ def Rozdzielenie_64bitow_na_8paczek_8bitow(Calo_bitowa_wiadomosc):
             paczka_nr8.append(Calo_bitowa_wiadomosc[_])
     return paczka_nr1, paczka_nr2, paczka_nr3, paczka_nr4, paczka_nr5, paczka_nr6, paczka_nr7, paczka_nr8
 
+def hamming_encode(data):
+    # Calculate number of parity bits required
+    r = 0
+    while 2**r < len(data) + r + 1:
+        r += 1
+
+    # Initialize codeword with zeros
+    codeword = [0] * (len(data) + r)
+
+    # Fill in data bits into codeword
+    j = 0
+    for i in range(len(codeword)):
+        if i + 1 not in [2**x for x in range(r)]:
+            codeword[i] = data[j]
+            j += 1
+
+    # Calculate parity bits
+    for i in range(r):
+        parity_index = 2**i - 1
+        parity = 0
+        for j in range(parity_index, len(codeword), 2 * (parity_index + 1)):
+            for k in range(parity_index + 1):
+                if j + k < len(codeword):
+                    parity ^= codeword[j + k]
+        codeword[parity_index] = parity
+
+    return codeword
+
+def hamming_decode(codeword):
+    # Find number of parity bits
+    r = 0
+    while 2**r < len(codeword):
+        r += 1
+
+    # Initialize syndrome
+    syndrome = 0
+
+    # Calculate syndrome
+    for i in range(r):
+        parity_index = 2**i - 1
+        parity = 0
+        for j in range(parity_index, len(codeword), 2 * (parity_index + 1)):
+            for k in range(parity_index + 1):
+                if j + k < len(codeword):
+                    parity ^= codeword[j + k]
+        syndrome += parity * 2**i
+
+    # Correct error if found
+    if syndrome != 0:
+        if syndrome <= len(codeword):
+            codeword[syndrome - 1] ^= 1
+
+    # Determine if there are more than 1 errors
+    syndrome = 0
+    for i in range(r):
+        parity_index = 2**i - 1
+        parity = 0
+        for j in range(parity_index, len(codeword), 2 * (parity_index + 1)):
+            for k in range(parity_index + 1):
+                if j + k < len(codeword):
+                    parity ^= codeword[j + k]
+        syndrome += parity * 2**i
+
+    if syndrome != 0:
+        return None  # More than 1 error detected
+
+    # Extract data bits
+    decoded_data = []
+    j = 0
+    for i in range(len(codeword)):
+        if i + 1 not in [2**x for x in range(r)]:
+            decoded_data.append(codeword[i])
+
+    return decoded_data
 
 
 
@@ -44,92 +118,43 @@ def Filipownie_bitow(Vetor_przyjety, bit: int):
     elif Vetor_przyjety[bit] == 0:
         Vetor_przyjety[bit] = 1
 
-#zreworkowac trzeba to
-def Wprowadznie_bledu_do_wiadomosci(Cala_wiadmosc,ilosc_beldow):
-    for i in range(random.randint(0, ilosc_beldow)):
-        Filipownie_bitow(Cala_wiadmosc, int(random.randint(0, 14)))
-        ilosc_beldow -= 1
-    return Cala_wiadmosc, ilosc_beldow
+#naprawic trzeba
 
-"""def sprawdzanie_czy_jest_blad(wiadomosc, klucz):
-    czesc_wiadomosci = []
-    czesc_modulo = []
-    for _ in range(len(wiadomosc)):
-        if _ <= 7:
-            czesc_wiadomosci.append(wiadomosc[_])
-        elif _ > 7 and _ <= 14:
-            czesc_modulo.append(wiadomosc[_])
-        else:
-            raise ValueError("Zaduzo bitow")
-    modulo_wiadmosci = crc_remainder(czesc_wiadomosci, klucz)
-    if modulo_wiadmosci == czesc_modulo:
-        return 0, czesc_wiadomosci
-    else:
-        return 1, czesc_wiadomosci
-def Sprawdzanie_i_wysyalknie_posby(wiadomosc, klucz):
-    x, poprawna_wiadomosc = sprawdzanie_czy_jest_blad(wiadomosc, klucz)
-    if x == 0:
-        return poprawna_wiadomosc
-    elif x == 1:
-        pass #nw narazie jak to zorbic zeby poprosilo o ponowne wyslanie
+def Wprowadznie_bledu_do_wiadomosci(Cala_wiadmosc):
+    pass
 
+#96 bitow trezba potasowac
+#dziala
+def tasowanie_bitow(p1,p2,p3,p4,p5,p6,p7,p8):
+    array_paczek = [p1,p2,p3,p4,p5,p6,p7,p8]
+    przetasowane = [15]*96
+    for i in range(len(array_paczek)):
+        z = i
+        for j in range(12):
+            przetasowane[z] = array_paczek[i][j]
+            z += 8
 
-def pod_zes_paczka_handler(paczka,paczka_pre_zaszyfrowana, key, ilosc_bledow, output):
-    back_up = paczka.copy()
-    back_up.extend(paczka_pre_zaszyfrowana)
-    paczka_zaszyfrowana_z_bledem, ilosc_bledow_updated = Wprowadznie_bledu_do_wiadomosci(back_up, ilosc_bledow)
-    czy_jest_dobrze, poprawna_wiadomosc = sprawdzanie_czy_jest_blad(paczka_zaszyfrowana_z_bledem, key)
+    return przetasowane
 
-    if czy_jest_dobrze == 1:
-        pod_zes_paczka_handler(paczka, paczka_pre_zaszyfrowana, key, ilosc_bledow_updated, output)
-    elif czy_jest_dobrze == 0:
-        output.append(poprawna_wiadomosc)
-        return poprawna_wiadomosc
-    else:
-        raise ValueError("pod_paczka_handler niepoprawnie dziala")
-def paczka_handler(paczka, key, ilosc_bledow, output):
-    paczka_pre_zaszyfrowana = crc_remainder(paczka, key)
-    return pod_zes_paczka_handler(paczka, paczka_pre_zaszyfrowana, key, ilosc_bledow, output)
-"""
-"""def Caly_Program(input: array, print_out = False) -> array:
-    key = [1, 0, 0, 0, 0, 1, 1, 1]
-    ilosc_bledow = 8
-    p1, p2, p3, p4, p5, p6, p7, p8 = Rozdzielenie_64bitow_na_8paczek_8bitow(input)
-    Paczka_array = [p1, p2, p3, p4, p5, p6, p7, p8]
-    out_Paczki = []
-    for x in range(len(Paczka_array)):
-        _ = paczka_handler(Paczka_array[x], key, ilosc_bledow, out_Paczki)
-    output = []
-    for i in out_Paczki:
-        output.extend(i)
+def main():
+    pass
 
-    if output == input and print_out == True:
-        print("udalo sie pomyslnie przeslac")
-        print(f"input: {input}")
-        print(f"output: {output}")
-        return output
-    elif output == input and print_out == False:
-        return output
-    else:
-        raise ValueError("cos poszlo nie tak")
-"""
-def random_64_bit_test_vector_generator():
-    random_array = [random.randint(0, 1) for _ in range(64)]
+def random_64_bit_test_vector_generator(x = 64):
+    random_array = [random.randint(0, 1) for _ in range(x)]
     return random_array
 
 if __name__ == "__main__":
-    key = [1, 0, 0, 0, 0, 1, 1, 1]
-    #Testowy_vector = [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0]
+    """#Testowy_vector = [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0]
     #Caly_Program(random_64_bit_test_vector_generator(), True)
     wynik = 0
     probka = 100000
 
     for x in range(probka):
         try:
-            Caly_Program(random_64_bit_test_vector_generator())
+            main(random_64_bit_test_vector_generator())
             wynik += 1
         except ValueError:
             pass
 
     print(f"W {wynik}/{probka} przypadkach bylo dobrze")
-    print(f"w {(wynik/probka)*100}% jest dobrze")
+    print(f"w {(wynik/probka)*100}% jest dobrze")"""
