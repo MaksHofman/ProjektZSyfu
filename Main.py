@@ -136,7 +136,13 @@ def tasowanie_bitow(array_paczek):
 
 #wazne
 def od_tasownie_bitow(array_paczek):
-    pass
+    od_tasownie_array = []
+    for i in range(8):
+        z = 0
+        for j in range(12):
+            od_tasownie_array.append(array_paczek[i + z])
+            z += 8
+    return od_tasownie_array
 
 def main(input, print_out = False):
     back_up = input
@@ -149,11 +155,16 @@ def main(input, print_out = False):
     Wprowadznie_bledu_do_wiadomosci(array_przetasowanie)
     od_tasownie_array = od_tasownie_bitow(array_przetasowanie)
     array_output = []
-    for y in od_tasownie_array:
-        array_output.append(hamming_decode(y))
+    b1, b2, b3, b4, b5, b6, b7, b8 = [],[],[],[],[],[],[],[]
+    b_array = [b1,b2,b3,b4,b5,b6,b7,b8]
+    for ta in range(int(len(od_tasownie_array)/12)):
+        for i in range(12):
+            b_array[ta].append(od_tasownie_array[i])
+    print(b_array)
+    for z in b_array:
+        array_output.extend(hamming_decode(z))
     output = []
-    for z in array_output:
-        output.extend(z)
+    output.extend(array_output)
     if print_out and input == back_up and input == output:
         print("udalo sie")
         print(f"Input = {input}")
