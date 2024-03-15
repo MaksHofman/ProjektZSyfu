@@ -1,9 +1,6 @@
 """
 Lore
-Ogulnie uzywamy CRC dla mnieszych paczek 8bitowych( i 8 bedzie takich paczek) dodajemy 7 bitow do kazdego modulo
-wiec bedzie extra 56bitow wiec spoko i wykrywa jak jest nawet 8 bitow zle w 8 bitwej paczce.
-
-stronka z wytlumaczniem co to crc - https://pl.wikipedia.org/wiki/Cykliczny_kod_nadmiarowy
+Hamming secded tasownie bitow
 """
 import random
 array = list[int]
@@ -134,13 +131,12 @@ def tasowanie_bitow(array_paczek):
 
     return przetasowane
 
-#wazne
 def od_tasownie_bitow(array_paczek):
     od_tasownie_array = []
     for i in range(8):
-        z = 0
+        z = i
         for j in range(12):
-            od_tasownie_array.append(array_paczek[i + z])
+            od_tasownie_array.append(array_paczek[z])
             z += 8
     return od_tasownie_array
 
@@ -148,6 +144,7 @@ def main(input, print_out = False):
     back_up = input
     p1,p2,p3,p4,p5,p6,p7,p8 = Rozdzielenie_64bitow_na_8paczek_8bitow(input)
     array_paczek_pre_kodowanie = [p1,p2,p3,p4,p5,p6,p7,p8]
+    #jest git
     array_zakodowane = []
     for x in array_paczek_pre_kodowanie:
         array_zakodowane.append(hamming_encode(x))
@@ -183,6 +180,9 @@ def random_64_bit_test_vector_generator():
 
 if __name__ == "__main__":
 
+    """
+    Tasownie dziala
+    """
     main(random_64_bit_test_vector_generator(), True)
     
     """wynik = 0
