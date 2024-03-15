@@ -154,10 +154,13 @@ def main(input, print_out = False):
     array_output = []
     b1, b2, b3, b4, b5, b6, b7, b8 = [],[],[],[],[],[],[],[]
     b_array = [b1,b2,b3,b4,b5,b6,b7,b8]
-    for ta in range(int(len(od_tasownie_array)/12)):
+    #to jest zle
+    zminea = 0
+    for ta in range(8):
         for i in range(12):
-            b_array[ta].append(od_tasownie_array[i])
-    print(b_array)
+            b_array[ta].append(od_tasownie_array[zminea])
+            zminea +=1
+
     for z in b_array:
         array_output.extend(hamming_decode(z))
     output = []
@@ -180,13 +183,10 @@ def random_64_bit_test_vector_generator():
 
 if __name__ == "__main__":
 
-    """
-    Tasownie dziala
-    """
     main(random_64_bit_test_vector_generator(), True)
     
-    """wynik = 0
-    probka = 100000
+    wynik = 0
+    probka = 1000
 
     for x in range(probka):
         try:
@@ -197,4 +197,3 @@ if __name__ == "__main__":
 
     print(f"W {wynik}/{probka} przypadkach bylo dobrze")
     print(f"w {(wynik/probka)*100}% jest dobrze")
-"""
